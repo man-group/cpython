@@ -251,10 +251,10 @@ class ParserBase:
         if j == -1:
             return -1
         # style content model; just skip until '>'
-        rawdata = self.rawdata
-        if '>' in rawdata[j:]:
-            return rawdata.find(">", j) + 1
-        return -1
+        pos = self.rawdata.find(">", j)
+        if pos == -1:
+            return -1
+        return pos + 1
 
     # Internal -- scan past <!ATTLIST declarations
     def _parse_doctype_attlist(self, i, declstartpos):
@@ -276,9 +276,8 @@ class ParserBase:
                 return -1
             if c == "(":
                 # an enumerated type; look for ')'
-                if ")" in rawdata[j:]:
-                    j = rawdata.find(")", j) + 1
-                else:
+                j = rawdata.find(")", j) + 1
+                if j == 0:
                     return -1
                 while rawdata[j:j+1].isspace():
                     j = j + 1
