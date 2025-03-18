@@ -28,6 +28,7 @@ except ImportError:
 
 try:
     import lzma # We may need its compression method
+    crc32 = lzma.crc32
 except ImportError:
     lzma = None
 
