@@ -12,7 +12,7 @@ dnl
 # Set VERSION so we only need to edit in one place (i.e., here)
 m4_define([PYTHON_VERSION], [3.14])
 
-AC_PREREQ([2.72])
+AC_PREREQ([2.71])
 
 AC_INIT([python],[PYTHON_VERSION],[https://github.com/python/cpython/issues/])
 
@@ -5384,6 +5384,20 @@ PKG_CHECK_MODULES([LIBLZMA], [liblzma], [have_liblzma=yes], [
   ])
 ])
 
+PKG_CHECK_MODULES([LIBDEFLATE], [libdeflate], [have_libdeflate=yes], [
+  WITH_SAVE_ENV([
+    CPPFLAGS="$CPPFLAGS $LIBDEFLATE_CFLAGS"
+    LIBS="$LIBS $LIBDEFLATE_LIBS"
+    AC_CHECK_HEADERS([libdeflate.h], [
+      AC_CHECK_LIB([deflate], [libdeflate_crc32], [have_libdeflate=yes], [have_libdeflate=no])
+    ], [have_libdeflate=no])
+    AS_VAR_IF([have_libdeflate], [yes], [
+      LIBDEFLATE_CFLAGS=${LIBDEFLATE_CFLAGS-""}
+      LIBDEFLATE_LIBS=${LIBDEFLATE_LIBS-"-ldeflate"}
+    ])
+  ])
+])
+
 dnl PY_CHECK_NETDB_FUNC(FUNCTION)
 AC_DEFUN([PY_CHECK_NETDB_FUNC], [PY_CHECK_FUNC([$1], [@%:@include <netdb.h>])])
 
@@ -7941,6 +7955,8 @@ PY_STDLIB_MOD([_bz2], [], [test "$have_bzip2" = yes],
   [$BZIP2_CFLAGS], [$BZIP2_LIBS])
 PY_STDLIB_MOD([_lzma], [], [test "$have_liblzma" = yes],
   [$LIBLZMA_CFLAGS], [$LIBLZMA_LIBS])
+PY_STDLIB_MOD([deflate], [], [test "$have_libdeflate" = yes],
+  [$LIBDEFLATE_CFLAGS], [$LIBDEFLATE_LIBS])
 
 dnl OpenSSL bindings
 PY_STDLIB_MOD([_ssl], [], [test "$ac_cv_working_openssl_ssl" = yes],

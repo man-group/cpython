@@ -200,6 +200,7 @@ PYTHONPATH=$(COREPYTHONPATH)
 #_gdbm _gdbmmodule.c -lgdbm
 #_lzma _lzmamodule.c -llzma
 #_uuid _uuidmodule.c -luuid
+#deflate deflatemodule.c -ldeflate
 #zlib  zlibmodule.c -lz
 
 # The readline module also supports libeditline (-leditline).
