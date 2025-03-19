@@ -383,4 +383,59 @@ exit:
 
     return return_value;
 }
-/*[clinic end generated code: output=7d0ec5a55434cd6a input=a9049054013a1b77]*/
+
+PyDoc_STRVAR(_lzma_crc64__doc__,
+"crc64($module, data, value=0, /)\n"
+"--\n"
+"\n"
+"Compute a CRC-64 checksum of data.\n"
+"\n"
+"  value\n"
+"    Starting value of the checksum.\n"
+"\n"
+"The returned checksum is an integer.");
+
+#define _LZMA_CRC64_METHODDEF    \
+    {"crc64", _PyCFunction_CAST(_lzma_crc64), METH_FASTCALL, _lzma_crc64__doc__},
+
+static size_t
+_lzma_crc64_impl(PyObject *module, Py_buffer *data, unsigned long value);
+
+static PyObject *
+_lzma_crc64(PyObject *module, PyObject *const *args, Py_ssize_t nargs)
+{
+    PyObject *return_value = NULL;
+    Py_buffer data = {NULL, NULL};
+    unsigned long value = 0;
+    size_t _return_value;
+
+    if (!_PyArg_CheckPositional("crc64", nargs, 1, 2)) {
+        goto exit;
+    }
+    if (PyObject_GetBuffer(args[0], &data, PyBUF_SIMPLE) != 0) {
+        goto exit;
+    }
+    if (nargs < 2) {
+        goto skip_optional;
+    }
+    if (!PyLong_Check(args[1])) {
+        _PyArg_BadArgument("crc64", "argument 2", "int", args[1]);
+        goto exit;
+    }
+    value = PyLong_AsUnsignedLongMask(args[1]);
+skip_optional:
+    _return_value = _lzma_crc64_impl(module, &data, value);
+    if ((_return_value == (size_t)-1) && PyErr_Occurred()) {
+        goto exit;
+    }
+    return_value = PyLong_FromSize_t(_return_value);
+
+exit:
+    /* Cleanup for data */
+    if (data.obj) {
+       PyBuffer_Release(&data);
+    }
+
+    return return_value;
+}
+/*[clinic end generated code: output=2158063479dad420 input=a9049054013a1b77]*/

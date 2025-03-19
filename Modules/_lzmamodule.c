@@ -1628,11 +1628,42 @@ _lzma_crc32_impl(PyObject *module, Py_buffer *data, unsigned int value)
     return value;
 }
 
+
+/*[clinic input]
+_lzma.crc64 -> unsigned_long_long
+
+    data: Py_buffer
+    value: unsigned_long_long(bitwise=True) = 0
+        Starting value of the checksum.
+    /
+
+Compute a CRC-64 checksum of data.
+
+The returned checksum is an integer.
+[clinic start generated code]*/
+
+static size_t
+_lzma_crc64_impl(PyObject *module, Py_buffer *data, unsigned long long value)
+/*[clinic end generated code: output=0ed2d8e7b9cda0c1 input=edfa9fdb898a257c]*/
+{
+    /* Releasing the GIL for very small buffers is inefficient
+       and may lower performance */
+    if (data->len > 1024*5) {
+        Py_BEGIN_ALLOW_THREADS
+        value = lzma_crc64(data->buf, (size_t)data->len, (uint64_t)value);
+        Py_END_ALLOW_THREADS
+    } else {
+        value = lzma_crc64(data->buf, (size_t)data->len, (uint64_t)value);
+    }
+    return value;
+}
+
 static PyMethodDef lzma_methods[] = {
     _LZMA_IS_CHECK_SUPPORTED_METHODDEF
     _LZMA__ENCODE_FILTER_PROPERTIES_METHODDEF
     _LZMA__DECODE_FILTER_PROPERTIES_METHODDEF
     _LZMA_CRC32_METHODDEF
+    _LZMA_CRC64_METHODDEF
     {NULL}
 };
 
