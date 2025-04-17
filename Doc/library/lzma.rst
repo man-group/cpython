@@ -326,7 +326,7 @@ Compressing and decompressing data in memory
    the algorithm is designed for use as a checksum algorithm, it is not suitable
    for use as a general hash algorithm.
 
-   .. versionadded:: 3.14
+   .. versionadded:: next
 
 .. function:: decompress(data, format=FORMAT_AUTO, memlimit=None, filters=None)
 
