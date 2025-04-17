@@ -318,7 +318,7 @@ Compressing and decompressing data in memory
       single: checksum; Cyclic Redundancy Check
 
    Computes a CRC (Cyclic Redundancy Check) checksum of *data*. The
-   result is a positive integer. If *value* is present, it is used
+   result is a positive integer, less than :math:`2^32`. If *value* is present, it is used
    as the starting value of the checksum; otherwise, a default value of 0
    is used.  Passing in *value* allows computing a running checksum over the
    concatenation of several inputs.  The algorithm is not cryptographically
