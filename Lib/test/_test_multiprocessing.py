@@ -53,6 +53,7 @@ import multiprocessing.heap
 import multiprocessing.managers
 import multiprocessing.pool
 import multiprocessing.queues
+import multiprocessing.spawn
 from multiprocessing.connection import wait
 
 from multiprocessing import util
@@ -981,6 +982,28 @@ class _TestProcess(BaseTestCase):
         proc = self.Process(target=sys.exit)
         proc.start()
         proc.join()
+
+    @only_run_in_spawn_testsuite("spawn-specific test")
+    def test_spawn_errors_propagated(self):
+        """
+        Test that errors starting the subprocess using spawning are propagated
+
+        This covers a bug seen where `multiprocessing.util.spawnv_passfds`
+        did not correctly include the error return pipe in the FDs to keep
+        when calling `_posixsubprocess.fork_exec`.
+        """
+        if self.TYPE == "threads":
+            self.skipTest(f"test not appropriate for {self.TYPE}")
+        # Temporarily set the spawn executable to a directory to force failure
+        original_exe = multiprocessing.spawn.get_executable()
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                multiprocessing.spawn.set_executable(temp_dir)
+                p = self.Process()
+                with self.assertRaises(OSError):
+                    p.start()
+        finally:
+            multiprocessing.spawn.set_executable(original_exe)
 
 #
 #

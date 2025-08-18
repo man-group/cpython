@@ -513,8 +513,9 @@ def _flush_std_streams():
 
 def spawnv_passfds(path, args, passfds):
     import _posixsubprocess
-    passfds = tuple(sorted(map(int, passfds)))
     errpipe_read, errpipe_write = os.pipe()
+    passfds = tuple(
+        sorted(itertools.chain(map(int, passfds), (errpipe_write,))))
     try:
         return _posixsubprocess.fork_exec(
             args, [path], True, passfds, None, None,
